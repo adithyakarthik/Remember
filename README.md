@@ -63,7 +63,7 @@ free one from [neon.tech](https://neon.tech)).
 cp .env.example .env      # then set DATABASE_URL
 npm install
 npm run setup             # create the database tables
-npm run dev               # http://localhost:3000
+npm run dev               # http://localhost:3001
 ```
 
 On the login page, enter your email and click **Send login code** — since no
