@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  finds    Find[]
+  sessions Session[]
+}
+
+// One-time passcodes for email login. Not tied to a User row via foreign
+// key because the very first OTP for a brand-new email is requested before
+// any User exists yet (the User is created on first successful verify).
+model OtpCode {
+  id         String    @id @default(cuid())
+  email      String
+  codeHash   String
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([email])
+}
+
+model Session {
+  id        String   @id @default(cuid()) // also the value stored in the session cookie
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+// A shop/item spotted while out and about, geo-tagged so it can be found
+// again later (e.g. a piece of furniture on Commercial Street, Bengaluru,
+// filed under "Furniture" for whenever the user is ready to go buy it).
+model Find {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  title       String
+  description String?
+  heading     String // primary category, e.g. "Furniture" (free text, autocompleted from past entries)
+  tags        String[] @default([]) // free-form extra tags, e.g. ["wood","handmade"]
+
+  shopName  String?
+  address   String? // human-readable, from geocoding (editable)
+  latitude  Float
+  longitude Float
+
+  photos    FindPhoto[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([userId, heading])
+}
+
+model FindPhoto {
+  id        String   @id @default(cuid())
+  findId    String
+  find      Find     @relation(fields: [findId], references: [id], onDelete: Cascade)
+  url       String // Vercel Blob URL, or local /uploads/finds/... path in dev
+  createdAt DateTime @default(now())
+}
