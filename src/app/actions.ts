@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db";
 import { requireUser } from "@/lib/auth/session";
 import { saveUploadedPhoto } from "@/lib/storage";
+import { assertWithinPlan, LimitError } from "@/lib/limits";
 
 function parseTags(raw: string): string[] {
   return raw
@@ -37,16 +38,25 @@ function parseFindInput(formData: FormData) {
   };
 }
 
-async function uploadPhotos(formData: FormData): Promise<string[]> {
-  const files = formData.getAll("photos").filter((f): f is File => f instanceof File && f.size > 0);
-  return Promise.all(files.map((file) => saveUploadedPhoto(file)));
+function getPhotoFiles(formData: FormData): File[] {
+  return formData.getAll("photos").filter((f): f is File => f instanceof File && f.size > 0);
 }
 
 export async function createFind(formData: FormData) {
   const user = await requireUser();
 
   const input = parseFindInput(formData);
-  const photoUrls = await uploadPhotos(formData);
+  const files = getPhotoFiles(formData);
+
+  // Enforce the free-plan caps before uploading anything.
+  try {
+    await assertWithinPlan({ userId: user.id, plan: user.plan, heading: input.heading, newPhotoCount: files.length });
+  } catch (err) {
+    if (err instanceof LimitError) redirect(`/new?error=${encodeURIComponent(err.message)}`);
+    throw err;
+  }
+
+  const photoUrls = await Promise.all(files.map((file) => saveUploadedPhoto(file)));
 
   const find = await prisma.find.create({
     data: {
@@ -67,7 +77,22 @@ export async function updateFind(findId: string, formData: FormData) {
 
   const input = parseFindInput(formData);
   const removePhotoIds = formData.getAll("removePhotoIds").map(String);
-  const photoUrls = await uploadPhotos(formData);
+  const files = getPhotoFiles(formData);
+
+  try {
+    await assertWithinPlan({
+      userId: user.id,
+      plan: user.plan,
+      heading: input.heading,
+      newPhotoCount: files.length,
+      photosBeingReplaced: removePhotoIds.length,
+    });
+  } catch (err) {
+    if (err instanceof LimitError) redirect(`/find/${findId}/edit?error=${encodeURIComponent(err.message)}`);
+    throw err;
+  }
+
+  const photoUrls = await Promise.all(files.map((file) => saveUploadedPhoto(file)));
 
   await prisma.find.update({
     where: { id: findId },

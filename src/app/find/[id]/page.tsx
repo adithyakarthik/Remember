@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { requireUser } from "@/lib/auth/session";
+import { requireOnboardedUser } from "@/lib/auth/session";
 import { ConfirmSubmitForm } from "@/components/ConfirmSubmitForm";
 import { ShareButton } from "@/components/ShareButton";
 import { deleteFind } from "@/app/actions";
 
 export default async function FindDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const user = await requireUser();
+  const user = await requireOnboardedUser();
   const { id } = await params;
 
   const find = await prisma.find.findUnique({

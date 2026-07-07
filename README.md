@@ -25,17 +25,35 @@ work, with no app store needed.
 | 🔎 **Find it again** | Search across titles, tags, shop names and addresses, or filter by heading. |
 | 🗺️ **Navigate back** | Every find has an "Open in Google Maps" link to the exact spot. |
 | 📤 **Share** | Send a find to WhatsApp or anywhere via your phone's native share sheet. |
+| 📁 **Browse by folder** | The home screen groups your finds into folders by heading; open one to see its items. |
 
 Your data is private to your account — each person only ever sees their own
 finds.
+
+## Accounts & plans
+
+- **Sign in** with a one-time email code, or **Continue with Google** (once
+  Google is configured — see below). New users complete a short profile
+  (name, mobile, city, gender) the first time they sign in.
+- **Free plan:** up to **1 folder** and **10 photos**. Trying to exceed either
+  shows a friendly upgrade prompt.
+- **Pro plan:** unlimited folders and photos, via a monthly **Razorpay**
+  subscription (once billing is configured). The `/upgrade` page shows current
+  usage and the subscribe button; the account flips to Pro automatically when
+  Razorpay confirms payment via webhook.
+
+Both Google sign-in and Razorpay billing are **optional and config-gated** — if
+you don't set their keys, the Google button is hidden and the Upgrade page
+shows "coming soon", while email login and the free plan keep working.
 
 ## Tech stack
 
 **Next.js** (App Router) + **TypeScript**, **Prisma** ORM on **Postgres**,
 Tailwind CSS. Email-code login (no passwords) with an on-screen dev fallback,
-free keyless geocoding via **OpenStreetMap Nominatim**, and photo storage on
-**Vercel Blob** (with a local-disk fallback for development). No Google Maps
-API key required — map links use plain Google Maps URLs.
+optional Google OAuth, free keyless geocoding via **OpenStreetMap Nominatim**,
+photo storage on **Vercel Blob** (with a local-disk fallback for development),
+and optional **Razorpay** subscriptions. No Google Maps API key required — map
+links use plain Google Maps URLs.
 
 ## Deploy it (no terminal needed)
 
@@ -51,8 +69,37 @@ API key required — map links use plain Google Maps URLs.
      Vercel project to store photos there. Without it, photos are written to
      disk (fine locally, but not on Vercel's read-only filesystem — set this
      before uploading photos in production).
+   - (Optional) `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — to enable
+     "Continue with Google" (see below).
+   - (Optional) `RAZORPAY_*` — to enable paid Pro subscriptions (see below).
 3. Click **Deploy**. Database tables are created automatically on deploy. Open
    your live URL, sign in with your email, and start tagging.
+
+## Optional: turn on Google sign-in
+
+1. Go to [console.cloud.google.com](https://console.cloud.google.com) →
+   **APIs & Services → Credentials → Create Credentials → OAuth client ID**.
+2. Application type: **Web application**. Under **Authorized redirect URIs**, add:
+   - `http://localhost:3001/api/auth/google/callback` (for local testing)
+   - `https://your-app.vercel.app/api/auth/google/callback` (your live URL)
+3. Copy the **Client ID** and **Client secret** into `GOOGLE_CLIENT_ID` and
+   `GOOGLE_CLIENT_SECRET`. The "Continue with Google" button appears
+   automatically once both are set.
+
+## Optional: turn on paid subscriptions (Razorpay)
+
+1. Sign up at [razorpay.com](https://razorpay.com) and complete KYC.
+2. Create a **Subscription Plan** (Subscriptions → Plans) — e.g. monthly — and
+   copy its **Plan ID** into `RAZORPAY_PLAN_ID`.
+3. From **Settings → API Keys**, generate keys and set `RAZORPAY_KEY_ID` and
+   `RAZORPAY_KEY_SECRET`.
+4. Under **Settings → Webhooks**, add a webhook to
+   `https://your-app.vercel.app/api/billing/webhook`, subscribe to the
+   `subscription.*` events, set a secret, and put it in
+   `RAZORPAY_WEBHOOK_SECRET`.
+
+Once these are set, the `/upgrade` page shows a working **Subscribe** button;
+paying flips the account to Pro (unlimited folders/photos) automatically.
 
 ## Run it locally
 

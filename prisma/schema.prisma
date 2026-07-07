@@ -15,6 +15,17 @@ model User {
   email     String   @unique
   createdAt DateTime @default(now())
 
+  // Profile, collected once at onboarding (/welcome) after first sign-in.
+  name   String?
+  mobile String?
+  city   String?
+  gender String? // "male" | "female" | "other"
+
+  // Subscription. FREE users are capped (see src/lib/limits.ts); PRO is
+  // unlocked by an active Razorpay subscription confirmed via webhook.
+  plan          String    @default("FREE") // "FREE" | "PRO"
+  planUpdatedAt DateTime?
+
   finds    Find[]
   sessions Session[]
 }

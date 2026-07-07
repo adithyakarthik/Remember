@@ -5,19 +5,36 @@ import { prisma } from "@/lib/db";
 export const SESSION_COOKIE_NAME = "session";
 const SESSION_TTL_DAYS = 30;
 
+export type Plan = "FREE" | "PRO";
+
 export interface CurrentUser {
   id: string;
   email: string;
+  name: string | null;
+  mobile: string | null;
+  city: string | null;
+  gender: string | null;
+  plan: Plan;
 }
 
-/** Finds or creates the User row for an email that just passed OTP verification. */
-export async function findOrCreateUser(email: string) {
+/** A profile is "complete" once all onboarding fields are filled in. */
+export function isProfileComplete(user: CurrentUser): boolean {
+  return Boolean(user.name && user.mobile && user.city && user.gender);
+}
+
+/**
+ * Finds or creates the User row for an email that just authenticated (email
+ * OTP or Google). `defaults` lets Google prefill the name on first sign-in.
+ */
+export async function findOrCreateUser(email: string, defaults?: { name?: string | null }) {
   const normalizedEmail = email.trim().toLowerCase();
 
   const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existing) return existing;
 
-  return prisma.user.create({ data: { email: normalizedEmail } });
+  return prisma.user.create({
+    data: { email: normalizedEmail, name: defaults?.name?.trim() || null },
+  });
 }
 
 export async function createSession(userId: string) {
@@ -58,7 +75,16 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
   });
   if (!session || session.expiresAt.getTime() < Date.now()) return null;
 
-  return { id: session.user.id, email: session.user.email };
+  const u = session.user;
+  return {
+    id: u.id,
+    email: u.email,
+    name: u.name,
+    mobile: u.mobile,
+    city: u.city,
+    gender: u.gender,
+    plan: u.plan === "PRO" ? "PRO" : "FREE",
+  };
 }
 
 /** For use at the top of any protected server component or server action. */
@@ -66,6 +92,18 @@ export async function requireUser(): Promise<CurrentUser> {
   const user = await getCurrentUser();
   if (!user) {
     redirect("/login");
+  }
+  return user;
+}
+
+/**
+ * Like requireUser, but also sends users who haven't finished onboarding to
+ * /welcome. Use on the main app pages; /welcome itself uses requireUser.
+ */
+export async function requireOnboardedUser(): Promise<CurrentUser> {
+  const user = await requireUser();
+  if (!isProfileComplete(user)) {
+    redirect("/welcome");
   }
   return user;
 }

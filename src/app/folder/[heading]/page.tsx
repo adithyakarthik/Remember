@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { requireUser } from "@/lib/auth/session";
+import { requireOnboardedUser } from "@/lib/auth/session";
 import { FindCard } from "@/components/FindCard";
 
 export default async function FolderPage({ params }: { params: Promise<{ heading: string }> }) {
-  const user = await requireUser();
+  const user = await requireOnboardedUser();
   const { heading: raw } = await params;
   const heading = decodeURIComponent(raw);
 

@@ -1,14 +1,21 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { requireUser } from "@/lib/auth/session";
+import { requireOnboardedUser } from "@/lib/auth/session";
 import { listFindHeadings } from "@/lib/finds";
 import { updateFind } from "@/app/actions";
 import { FindForm } from "@/app/FindForm";
 
-export default async function EditFindPage({ params }: { params: Promise<{ id: string }> }) {
-  const user = await requireUser();
+export default async function EditFindPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ error?: string }>;
+}) {
+  const user = await requireOnboardedUser();
   const { id } = await params;
+  const { error } = await searchParams;
 
   const [find, headingOptions] = await Promise.all([
     prisma.find.findUnique({
@@ -27,6 +34,15 @@ export default async function EditFindPage({ params }: { params: Promise<{ id: s
         ← Back to find
       </Link>
       <h1 className="mt-1 text-2xl font-semibold tracking-tight">Edit find</h1>
+
+      {error && (
+        <div className="mt-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+          {error}{" "}
+          <Link href="/upgrade" className="font-medium underline">
+            Upgrade
+          </Link>
+        </div>
+      )}
 
       <div className="mt-6">
         <FindForm

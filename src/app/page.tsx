@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
-import { requireUser } from "@/lib/auth/session";
+import { requireOnboardedUser } from "@/lib/auth/session";
 import { FindCard } from "@/components/FindCard";
 
 export default async function HomePage({
@@ -8,7 +8,7 @@ export default async function HomePage({
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
-  const user = await requireUser();
+  const user = await requireOnboardedUser();
   const { q } = await searchParams;
   const query = (q ?? "").trim();
 

@@ -18,5 +18,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!login|manifest.webmanifest|icon|apple-icon|_next/static|_next/image|favicon.ico|uploads).*)"],
+  // API routes (Google OAuth callback, Razorpay webhook) authenticate
+  // themselves, so they're excluded from the session-cookie gate here.
+  matcher: ["/((?!login|api|manifest.webmanifest|icon|apple-icon|_next/static|_next/image|favicon.ico|uploads).*)"],
 };
