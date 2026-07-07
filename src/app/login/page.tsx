@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { requestOtp } from "./actions";
 import { isGoogleConfigured } from "@/lib/auth/google";
+import { LogoTile, Wordmark } from "@/components/Logo";
+import { BRAND_GRADIENT } from "@/lib/brand";
 
 export default async function LoginPage({
   searchParams,
@@ -14,8 +16,12 @@ export default async function LoginPage({
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-2">
       <div className="w-full max-w-sm">
-        <div className="mb-6 text-center">
-          <div className="text-2xl font-semibold tracking-tight">📍 Remember</div>
+        <div className="mb-6 flex flex-col items-center text-center">
+          <LogoTile size={56} />
+          <div className="mt-3">
+            <Wordmark className="text-3xl" />
+          </div>
+          <p className="mt-1 text-sm font-medium text-zinc-600 dark:text-zinc-300">You find it, just tag it.</p>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Sign in with your email — no password needed.
           </p>
@@ -65,7 +71,8 @@ export default async function LoginPage({
           </label>
           <button
             type="submit"
-            className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
+            className="rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-105"
+            style={{ backgroundImage: BRAND_GRADIENT }}
           >
             Send login code
           </button>

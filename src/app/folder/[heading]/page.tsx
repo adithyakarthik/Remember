@@ -2,6 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requireOnboardedUser } from "@/lib/auth/session";
 import { FindCard } from "@/components/FindCard";
+import { BRAND_GRADIENT } from "@/lib/brand";
 
 export default async function FolderPage({ params }: { params: Promise<{ heading: string }> }) {
   const user = await requireOnboardedUser();
@@ -24,7 +25,8 @@ export default async function FolderPage({ params }: { params: Promise<{ heading
           <h1 className="text-2xl font-semibold tracking-tight">📁 {heading}</h1>
           <Link
             href="/new"
-            className="shrink-0 rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
+            className="shrink-0 rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-105"
+            style={{ backgroundImage: BRAND_GRADIENT }}
           >
             + New find
           </Link>

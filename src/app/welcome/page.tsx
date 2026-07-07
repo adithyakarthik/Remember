@@ -1,5 +1,6 @@
 import { requireUser } from "@/lib/auth/session";
 import { saveProfile } from "./actions";
+import { BRAND_GRADIENT } from "@/lib/brand";
 
 export default async function WelcomePage({
   searchParams,
@@ -67,7 +68,8 @@ export default async function WelcomePage({
 
         <button
           type="submit"
-          className="mt-1 rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
+          className="mt-1 rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-105"
+          style={{ backgroundImage: BRAND_GRADIENT }}
         >
           Continue
         </button>

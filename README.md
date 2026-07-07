@@ -1,8 +1,10 @@
-# 📍 Remember
+# 🏷️ Tag It
+
+**You find it, just tag it.**
 
 Ever spotted a great piece of furniture, a lamp, a rug — something you'd want
 to buy *later* — in a shop while you were out, and then completely forgotten
-where it was? **Remember** fixes that.
+where it was? **Tag It** fixes that.
 
 When you see something worth coming back for, you snap a photo, tag the shop's
 location (one tap uses your phone's GPS), file it under a heading like

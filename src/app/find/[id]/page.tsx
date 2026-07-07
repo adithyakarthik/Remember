@@ -5,6 +5,7 @@ import { requireOnboardedUser } from "@/lib/auth/session";
 import { ConfirmSubmitForm } from "@/components/ConfirmSubmitForm";
 import { ShareButton } from "@/components/ShareButton";
 import { deleteFind } from "@/app/actions";
+import { BRAND_GRADIENT } from "@/lib/brand";
 
 export default async function FindDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await requireOnboardedUser();
@@ -36,7 +37,10 @@ export default async function FindDetailPage({ params }: { params: Promise<{ id:
 
       <div className="flex items-start justify-between gap-4">
         <div>
-          <span className="w-fit rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800 dark:bg-amber-950 dark:text-amber-400">
+          <span
+            className="w-fit rounded-full px-2.5 py-0.5 text-xs font-semibold text-white"
+            style={{ backgroundImage: BRAND_GRADIENT }}
+          >
             {find.heading}
           </span>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight">{find.title}</h1>

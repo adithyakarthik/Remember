@@ -17,7 +17,7 @@ export async function sendOtpEmail(email: string, code: string): Promise<SendOtp
   const fromEmail = process.env.RESEND_FROM_EMAIL;
 
   if (!apiKey || !fromEmail) {
-    console.log(`[dev-mode] Remember login code for ${email}: ${code} (valid 10 minutes)`);
+    console.log(`[dev-mode] Tag It login code for ${email}: ${code} (valid 10 minutes)`);
     return { devFallback: true };
   }
 
@@ -30,7 +30,7 @@ export async function sendOtpEmail(email: string, code: string): Promise<SendOtp
     body: JSON.stringify({
       from: fromEmail,
       to: email,
-      subject: "Your Remember login code",
+      subject: "Your Tag It login code",
       text: `Your login code is ${code}. It expires in 10 minutes.`,
     }),
   });

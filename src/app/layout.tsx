@@ -4,6 +4,7 @@ import Link from "next/link";
 import "./globals.css";
 import { getCurrentUser } from "@/lib/auth/session";
 import { logoutAction } from "@/lib/auth/actions";
+import { BrandLock } from "@/components/Logo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,13 +17,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Remember",
-  description: "Tag shops and items you spot so you can find your way back to buy them later.",
-  appleWebApp: { capable: true, statusBarStyle: "default", title: "Remember" },
+  title: "Tag It",
+  description: "You find it, just tag it — tag shops and items you spot so you can find your way back.",
+  appleWebApp: { capable: true, statusBarStyle: "default", title: "Tag It" },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#d97706",
+  themeColor: "#ff5e7e",
 };
 
 export default async function RootLayout({
@@ -38,8 +39,8 @@ export default async function RootLayout({
         {user && (
           <header className="border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
             <div className="mx-auto flex max-w-4xl items-center justify-between px-5 py-4">
-              <Link href="/" className="shrink-0 whitespace-nowrap text-lg font-semibold tracking-tight">
-                📍 Remember
+              <Link href="/" className="shrink-0">
+                <BrandLock size={30} wordClass="text-lg" />
               </Link>
               <nav className="flex items-center gap-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 <Link

@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { resizeImage } from "@/lib/image-resize";
 import { LocationPicker } from "@/components/LocationPicker";
+import { BRAND_GRADIENT } from "@/lib/brand";
 
 type ExistingPhoto = { id: string; url: string };
 
@@ -190,7 +191,8 @@ export function FindForm({
       <button
         type="submit"
         disabled={isProcessing}
-        className="mt-2 rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-50"
+        className="mt-2 rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-105 disabled:opacity-50"
+        style={{ backgroundImage: BRAND_GRADIENT }}
       >
         {saveLabel}
       </button>

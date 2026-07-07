@@ -3,6 +3,7 @@ import { requireOnboardedUser } from "@/lib/auth/session";
 import { getUsage, FREE_MAX_FOLDERS, FREE_MAX_PHOTOS } from "@/lib/limits";
 import { isBillingConfigured } from "@/lib/billing";
 import { startCheckout } from "./actions";
+import { BRAND_GRADIENT } from "@/lib/brand";
 
 export default async function UpgradePage({
   searchParams,
@@ -64,7 +65,7 @@ export default async function UpgradePage({
       </div>
 
       {!isPro && (
-        <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 p-6 dark:border-amber-900 dark:bg-amber-950/40">
+        <div className="mt-6 rounded-xl border border-[#ffd3de] bg-[#fff2f5] p-6 dark:border-[#7a2540] dark:bg-[#2a0f19]">
           <h2 className="text-lg font-semibold">Upgrade to Pro</h2>
           <ul className="mt-3 space-y-1 text-sm text-zinc-700 dark:text-zinc-300">
             <li>✓ Unlimited folders</li>
@@ -75,7 +76,8 @@ export default async function UpgradePage({
             <form action={startCheckout} className="mt-4">
               <button
                 type="submit"
-                className="w-full rounded-lg bg-amber-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-amber-700"
+                className="w-full rounded-lg px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:brightness-105"
+                style={{ backgroundImage: BRAND_GRADIENT }}
               >
                 Subscribe monthly
               </button>

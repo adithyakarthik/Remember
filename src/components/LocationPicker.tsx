@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { lookupPlaceAction, reverseGeocodeAction } from "@/app/geocode-actions";
+import { BRAND_GRADIENT } from "@/lib/brand";
 
 export function LocationPicker({
   defaultAddress = "",
@@ -92,7 +93,8 @@ export function LocationPicker({
             type="button"
             onClick={handleUseMyLocation}
             disabled={status === "locating"}
-            className="whitespace-nowrap rounded-lg bg-amber-600 px-3 py-2 text-sm font-medium text-white hover:bg-amber-700 disabled:opacity-50"
+            className="whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-105 disabled:opacity-50"
+            style={{ backgroundImage: BRAND_GRADIENT }}
           >
             {status === "locating" ? "Locating…" : "Use my location"}
           </button>
@@ -147,7 +149,7 @@ export function LocationPicker({
           href={mapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="self-start text-sm font-medium text-amber-700 hover:underline dark:text-amber-500"
+          className="self-start text-sm font-medium text-[#e23670] hover:underline dark:text-[#ff7a9c]"
         >
           Open in Google Maps ↗
         </a>

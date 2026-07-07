@@ -1,4 +1,6 @@
 import { resendOtp, verifyOtpAction } from "../actions";
+import { Wordmark } from "@/components/Logo";
+import { BRAND_GRADIENT } from "@/lib/brand";
 
 export default async function VerifyPage({
   searchParams,
@@ -13,7 +15,7 @@ export default async function VerifyPage({
     <div className="flex min-h-[70vh] items-center justify-center px-2">
       <div className="w-full max-w-sm">
         <div className="mb-6 text-center">
-          <div className="text-2xl font-semibold tracking-tight">📍 Remember</div>
+          <Wordmark className="text-2xl" />
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             Enter the 6-digit code sent to{" "}
             <span className="font-medium text-zinc-700 dark:text-zinc-300">{email}</span>
@@ -55,7 +57,8 @@ export default async function VerifyPage({
           </label>
           <button
             type="submit"
-            className="rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
+            className="rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-105"
+            style={{ backgroundImage: BRAND_GRADIENT }}
           >
             Verify &amp; sign in
           </button>

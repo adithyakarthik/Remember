@@ -2,6 +2,8 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { requireOnboardedUser } from "@/lib/auth/session";
 import { FindCard } from "@/components/FindCard";
+import { folderGradient } from "@/lib/palette";
+import { BRAND_GRADIENT } from "@/lib/brand";
 
 export default async function HomePage({
   searchParams,
@@ -18,12 +20,13 @@ export default async function HomePage({
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Your finds</h1>
           <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-            Shops and items you&apos;ve spotted, organised into folders.
+            You find it, just tag it — organised into folders.
           </p>
         </div>
         <Link
           href="/new"
-          className="shrink-0 rounded-lg bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700"
+          className="shrink-0 rounded-lg px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:brightness-105"
+          style={{ backgroundImage: BRAND_GRADIENT }}
         >
           + New find
         </Link>
@@ -80,19 +83,25 @@ async function Folders({ userId }: { userId: string }) {
         <Link
           key={heading}
           href={`/folder/${encodeURIComponent(heading)}`}
-          className="flex flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900"
+          className="group flex flex-col overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
         >
-          <div className="flex h-28 w-full items-center justify-center bg-zinc-100 dark:bg-zinc-800">
+          <div
+            className="flex h-28 w-full items-center justify-center"
+            style={cover ? undefined : { backgroundImage: folderGradient(heading) }}
+          >
             {cover ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={cover} alt="" className="h-full w-full object-cover" />
             ) : (
-              <span className="text-3xl">📁</span>
+              <span className="text-4xl drop-shadow-sm">🏷️</span>
             )}
           </div>
           <div className="flex flex-col gap-0.5 p-3">
             <span className="truncate font-semibold text-zinc-900 dark:text-zinc-100">{heading}</span>
-            <span className="text-xs text-zinc-500 dark:text-zinc-400">
+            <span
+              className="w-fit rounded-full px-2 py-0.5 text-[11px] font-medium text-white"
+              style={{ backgroundImage: folderGradient(heading) }}
+            >
               {count} {count === 1 ? "item" : "items"}
             </span>
           </div>
@@ -126,7 +135,7 @@ async function SearchResults({ userId, query }: { userId: string; query: string 
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
           {finds.length} {finds.length === 1 ? "result" : "results"} for &ldquo;{query}&rdquo;
         </p>
-        <Link href="/" className="text-sm text-amber-700 hover:underline dark:text-amber-500">
+        <Link href="/" className="text-sm font-medium text-[#e23670] hover:underline dark:text-[#ff7a9c]">
           ← Back to folders
         </Link>
       </div>

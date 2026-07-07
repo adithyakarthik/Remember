@@ -14,7 +14,7 @@ export async function geocodePlace(query: string): Promise<GeocodeResult | null>
   const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`;
   const response = await fetch(url, {
     headers: {
-      "User-Agent": "Remember/1.0 (shop & item location tagging app)",
+      "User-Agent": "TagIt/1.0 (shop & item location tagging app)",
     },
   });
   if (!response.ok) return null;
@@ -34,7 +34,7 @@ export async function reverseGeocodePlace(latitude: number, longitude: number): 
   const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
   const response = await fetch(url, {
     headers: {
-      "User-Agent": "Remember/1.0 (shop & item location tagging app)",
+      "User-Agent": "TagIt/1.0 (shop & item location tagging app)",
     },
   });
   if (!response.ok) return null;
