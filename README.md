@@ -37,16 +37,22 @@ finds.
 - **Sign in** with a one-time email code, or **Continue with Google** (once
   Google is configured — see below). New users complete a short profile
   (name, mobile, city, gender) the first time they sign in.
-- **Free plan:** up to **1 folder** and **10 photos**. Trying to exceed either
-  shows a friendly upgrade prompt.
-- **Pro plan:** unlimited folders and photos, via a monthly **Razorpay**
-  subscription (once billing is configured). The `/upgrade` page shows current
-  usage and the subscribe button; the account flips to Pro automatically when
-  Razorpay confirms payment via webhook.
+- **Free and unlimited for everyone, right now.** Unlimited folders and photos,
+  no paywall, no plan badge. This is deliberate while we grow the user base.
 
-Both Google sign-in and Razorpay billing are **optional and config-gated** — if
-you don't set their keys, the Google button is hidden and the Upgrade page
-shows "coming soon", while email login and the free plan keep working.
+### Turning on paid plans later
+
+All the billing machinery — free-tier limits (folders/photos), the `/upgrade`
+page, and the Razorpay subscription + webhook — is written and left **dormant
+behind a single switch**. To bring paid plans back:
+
+1. Set `BILLING_ENABLED = true` in `src/lib/features.ts`.
+2. Configure the `RAZORPAY_*` env vars (see below).
+
+That restores the free-tier caps (**1 folder + 10 photos**), the plan badge in
+the nav, and the working `/upgrade` subscribe flow (an account flips to **Pro**
+automatically when Razorpay confirms payment via webhook). Google sign-in and
+Razorpay are both **optional and config-gated** independently.
 
 ## Tech stack
 

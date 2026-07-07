@@ -1,15 +1,21 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { requireOnboardedUser } from "@/lib/auth/session";
 import { getUsage, FREE_MAX_FOLDERS, FREE_MAX_PHOTOS } from "@/lib/limits";
 import { isBillingConfigured } from "@/lib/billing";
 import { startCheckout } from "./actions";
 import { BRAND_GRADIENT } from "@/lib/brand";
+import { BILLING_ENABLED } from "@/lib/features";
 
 export default async function UpgradePage({
   searchParams,
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
+  // Paid plans are off for now — Tag It is free and unlimited. Keep the route
+  // in place but send anyone who lands here back to their finds.
+  if (!BILLING_ENABLED) redirect("/");
+
   const user = await requireOnboardedUser();
   const { status } = await searchParams;
   const usage = await getUsage(user.id);

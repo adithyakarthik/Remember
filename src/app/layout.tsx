@@ -5,6 +5,7 @@ import "./globals.css";
 import { getCurrentUser } from "@/lib/auth/session";
 import { logoutAction } from "@/lib/auth/actions";
 import { BrandLock } from "@/components/Logo";
+import { BILLING_ENABLED } from "@/lib/features";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -43,21 +44,23 @@ export default async function RootLayout({
                 <BrandLock size={30} wordClass="text-lg" />
               </Link>
               <nav className="flex items-center gap-4 text-sm font-medium text-zinc-600 dark:text-zinc-400">
-                <Link
-                  href="/upgrade"
-                  className="flex items-center gap-1.5 hover:text-zinc-950 dark:hover:text-zinc-100"
-                >
-                  <span>Plan</span>
-                  <span
-                    className={`rounded-full px-1.5 py-0.5 text-[10px] font-semibold uppercase ${
-                      user.plan === "PRO"
-                        ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-400"
-                        : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
-                    }`}
+                {BILLING_ENABLED && (
+                  <Link
+                    href="/upgrade"
+                    className="flex items-center gap-1.5 hover:text-zinc-950 dark:hover:text-zinc-100"
                   >
-                    {user.plan}
-                  </span>
-                </Link>
+                    <span>Plan</span>
+                    <span
+                      className={`rounded-full px-1.5 py-0.5 text-[10px] font-semibold uppercase ${
+                        user.plan === "PRO"
+                          ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-400"
+                          : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300"
+                      }`}
+                    >
+                      {user.plan}
+                    </span>
+                  </Link>
+                )}
                 <span className="hidden text-zinc-400 sm:inline dark:text-zinc-500">{user.email}</span>
                 <form action={logoutAction}>
                   <button type="submit" className="hover:text-zinc-950 dark:hover:text-zinc-100">

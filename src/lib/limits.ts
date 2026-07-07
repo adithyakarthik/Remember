@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
 import type { Plan } from "@/lib/auth/session";
+import { BILLING_ENABLED } from "@/lib/features";
 
 // Free plan caps. PRO (active Razorpay subscription) removes them.
 export const FREE_MAX_FOLDERS = 1;
@@ -33,6 +34,8 @@ export async function assertWithinPlan(params: {
   newPhotoCount: number;
   photosBeingReplaced?: number;
 }): Promise<void> {
+  // Billing is off — everything is free and unlimited for everyone.
+  if (!BILLING_ENABLED) return;
   if (params.plan === "PRO") return;
 
   const usage = await getUsage(params.userId);
